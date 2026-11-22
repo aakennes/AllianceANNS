@@ -1,0 +1,21 @@
+External RaBitQ kernels
+======================
+Source: https://github.com/VectorDB-NTU/RaBitQ-Library
+Version: v0.7.1, commit e8fdff963509d527cbe870bb683776b6c03601fd.
+CMake fetches the pinned dependency, or accepts ALLIANCE_RABITQ_SOURCE_DIR at that commit.
+The official source is unmodified. Core only, native optimization OFF, runtime ISA dispatch.
+
+Search/rerank compressed-code dot products and compact packing/unpacking use the
+external library for 1/2/3/4/8-bit. The independent shared adapter hides upstream
+symbols so the legacy embedded quantizer cannot interpose on the external kernels.
+Deployment/frozen benchmarks must retain liballiance_rabitq_external.so alongside
+the binary (and a matching runtime library path); freezing the executable alone is insufficient.
+
+Existing checkpoint bitplanes, factors, rotation and padding remain unchanged.
+The 2-bit in-memory compact layout is different from the old embedded version;
+packing and unpacking now use the same external library. No compact data is persisted.
+The legacy embedded library remains for quantization, factor creation and rotation;
+this is a kernel migration, not a replacement of the whole quantizer/index format.
+No query SQ is used. --packed_rabitq 0 remains a compatibility/ablation path that
+combines one-bit external dots; the default multibit path uses one compact dot.
+Previous embedded/WoW microbenchmarks are not measurements of this dependency.

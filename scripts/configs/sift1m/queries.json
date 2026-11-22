@@ -1,0 +1,44 @@
+{
+  "defaults": {
+    "query_vec": "/SSD/SIFT1M/sift_query.fvecs"
+  },
+  "workloads": {
+    "mixed": {
+      "query_vec": "/SSD/kdr/allianceann/sift1m/queries/final_mixed_p1_p7/sift1m_mixed.query.fvecs",
+      "query_rng": "/SSD/kdr/allianceann/sift1m/queries/final_mixed_p1_p7/sift1m_mixed.ranges.ibin",
+      "gt": {
+        "10": "/SSD/kdr/allianceann/sift1m/queries/final_mixed_p1_p7/sift1m_mixed.k10.gt.ivecs",
+        "25": "/home/kdr/allianceann/logs/multi_k_range_suite_20261019/inputs/sift1m/sift1m_mixed.k25.gt.ivecs",
+        "100": "/home/kdr/allianceann/logs/multi_k_range_suite_20261019/inputs/sift1m/sift1m_mixed.k100.gt.ivecs"
+      },
+      "layout": "/SSD/kdr/allianceann/sift1m/static_cache/landing_v1/landing/b56a9b3d5e40959c43b7e0cc5783d2892dafaa93e8db0b2139fcb1329141ccd5/static_134217728.layout"
+    },
+    "p1": {
+      "query_rng": "/SSD/kdr/allianceann/sift1m/queries/final/sift1m_p1.ranges.ibin",
+      "gt": {
+        "10": "/SSD/kdr/allianceann/sift1m/queries/final/sift1m_p1.k10.gt.ivecs",
+        "25": "/home/kdr/allianceann/logs/multi_k_range_suite_20261019/inputs/sift1m/sift1m_p1.k25.gt.ivecs",
+        "100": "/home/kdr/allianceann/logs/multi_k_range_suite_20261019/inputs/sift1m/sift1m_p1.k100.gt.ivecs"
+      },
+      "layout": "/SSD/kdr/allianceann/sift1m/static_cache/landing_v1/landing/52aea4d13f6a17f1c34483eed0776ee9d8f6116a6baff2edf521e4f5abd694c3/static_134217728.layout"
+    },
+    "p4": {
+      "query_rng": "/SSD/kdr/allianceann/sift1m/queries/final/sift1m_p4.ranges.ibin",
+      "gt": {
+        "10": "/SSD/kdr/allianceann/sift1m/queries/final/sift1m_p4.k10.gt.ivecs",
+        "25": "/home/kdr/allianceann/logs/multi_k_range_suite_20261019/inputs/sift1m/sift1m_p4.k25.gt.ivecs",
+        "100": "/home/kdr/allianceann/logs/multi_k_range_suite_20261019/inputs/sift1m/sift1m_p4.k100.gt.ivecs"
+      },
+      "layout": "/SSD/kdr/allianceann/sift1m/static_cache/landing_v1/landing/638fae3deedd582be943b121a0a5a3c37af5ca1bb3cb1285bdc7271ca52f8b1a/static_134217728.layout"
+    },
+    "p7": {
+      "query_rng": "/SSD/kdr/allianceann/sift1m/queries/final/sift1m_p7.ranges.ibin",
+      "gt": {
+        "10": "/SSD/kdr/allianceann/sift1m/queries/final/sift1m_p7.k10.gt.ivecs",
+        "25": "/home/kdr/allianceann/logs/multi_k_range_suite_20261019/inputs/sift1m/sift1m_p7.k25.gt.ivecs",
+        "100": "/home/kdr/allianceann/logs/multi_k_range_suite_20261019/inputs/sift1m/sift1m_p7.k100.gt.ivecs"
+      },
+      "layout": "/SSD/kdr/allianceann/sift1m/static_cache/landing_v1/landing/936911d2cc84c90db43073af281968467104b3be9a3ed747d37ecc4c83e888f0/static_134217728.layout"
+    }
+  }
+}

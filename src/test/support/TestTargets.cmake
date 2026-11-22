@@ -1,0 +1,30 @@
+function(alliance_cpp_test target labels)
+    cmake_parse_arguments(T "" "" "SOURCES;DEFINITIONS;WRAP" ${ARGN})
+    if(NOT T_SOURCES)
+        set(T_SOURCES ${target}.cpp)
+    endif()
+    add_executable(${target} ${T_SOURCES})
+    target_include_directories(${target} PRIVATE ${PROJECT_SOURCE_DIR}/src/test
+        ${PROJECT_SOURCE_DIR}/src/alliance ${PROJECT_SOURCE_DIR}/src/tools)
+    target_link_libraries(${target} PRIVATE alliance_core Threads::Threads ${CMAKE_DL_LIBS})
+    target_compile_definitions(${target} PRIVATE ${T_DEFINITIONS})
+    if(MSVC)
+        target_compile_options(${target} PRIVATE /UNDEBUG)
+    else()
+        target_compile_options(${target} PRIVATE -UNDEBUG)
+    endif()
+    foreach(symbol IN LISTS T_WRAP)
+        target_link_options(${target} PRIVATE -Wl,--wrap=${symbol})
+    endforeach()
+    add_test(NAME ${target} COMMAND ${target})
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/test-tmp/${target})
+    set_tests_properties(${target} PROPERTIES LABELS "${labels}" TIMEOUT 300
+        ENVIRONMENT "TEST_TMPDIR=${CMAKE_BINARY_DIR}/test-tmp/${target}"
+        RESOURCE_LOCK alliance_fixed_test_paths)
+endfunction()
+
+function(alliance_python_test name script labels)
+    add_test(NAME ${name} COMMAND ${Python3_EXECUTABLE} -B ${script} ${ARGN})
+    set_tests_properties(${name} PROPERTIES LABELS "${labels}" TIMEOUT 420
+        ENVIRONMENT "PYTHONDONTWRITEBYTECODE=1")
+endfunction()

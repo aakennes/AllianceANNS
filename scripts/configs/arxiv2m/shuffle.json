@@ -1,0 +1,7 @@
+{
+  "parameters": {
+    "shuffle_mem_gb": 1,
+    "space": "ip"
+  },
+  "static_budget_bytes": 268435456
+}

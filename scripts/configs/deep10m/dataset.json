@@ -1,0 +1,12 @@
+{
+  "dataset": "deep10m",
+  "memory_max_bytes": 4294967296,
+  "paths": {
+    "index_run_root": "/SSD/kdr/allianceann/deep10m/script_runs"
+  },
+  "index": {
+    "graph_file": "/SSD/kdr/allianceann/deep10m/wow_bounded_20261017/graph.bin",
+    "meta_file": "/SSD/kdr/allianceann/deep10m/wow_bounded_20261017/meta.bin",
+    "ml_graph_file": "/SSD/kdr/allianceann/deep10m/wow_bounded_20261017/ml_graph.bin"
+  }
+}

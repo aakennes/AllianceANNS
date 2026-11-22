@@ -1,0 +1,70 @@
+{
+  "schema_version": 3,
+  "native_protocol": "alliance-formal-v1",
+  "dataset": "arxiv2m",
+  "notes": [
+    "Default in-tree RAM navigation profile: ef 64, score budget 256, count 16; each runtime curve requires a pinned navigation asset.",
+    "A new main graph/layout requires compatible navigation; never copy an old navigation file into a new build. No navigation generator is restored in this change.",
+    "Runtime bindings must pin this new profile SHA; existing frozen requests/results are not rewritten."
+  ],
+  "defaults": {
+    "threads": 1,
+    "metric": "ip",
+    "bits": 3,
+    "k": 10,
+    "queries": 3389,
+    "beam": 8,
+    "rerank_beam": 64,
+    "rerank_batch_blocks": 64,
+    "quantization_source": "checkpoint",
+    "shape": {
+      "vectors": 2138591,
+      "dimensions": 384,
+      "degree": 32,
+      "centroids": 256,
+      "edge_bytes": 4096,
+      "vector_bytes": 4096
+    },
+    "memory": {
+      "mode": "whole_process",
+      "loading_limit_bytes": 1073741824,
+      "search_rss_limit_bytes": 1073741824
+    },
+    "cache": {
+      "static_bytes": 503316480,
+      "dynamic_bytes": 8388608,
+      "clear_per_query": true,
+      "auto_size": true
+    },
+    "entry": {
+      "sampling": "range",
+      "samples": 0,
+      "count": 0
+    },
+    "routing": {
+      "filter_mode": "auto",
+      "prefilter_threshold": 8192,
+      "top_layer_postfilter": true
+    },
+    "aggregation": {
+      "policy": "qps-paired-trim",
+      "repeats": 5
+    },
+    "warmup_batches": 1,
+    "batch_order": "ef_then_repeat",
+    "malloc_arena_max": null,
+    "navigation": true,
+    "input_formats": {
+      "base": "fvecs",
+      "attributes": "raw-i32"
+    },
+    "ml_only": false
+  },
+  "workloads": {
+    "origin": {},
+    "p1": {},
+    "p4": {},
+    "p7": {},
+    "p10": {}
+  }
+}

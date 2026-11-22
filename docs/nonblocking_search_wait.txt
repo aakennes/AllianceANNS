@@ -1,0 +1,15 @@
+Multilevel search completion waiting
+
+DiskSearchContext selects IOHandler::CompletionWait::BusyPoll for the multilevel
+layout handler. Both graph and exact-vector completion waits poll nonblocking
+until at least one completion is available. Ordinary PollAll remains one poll.
+An x86 pause instruction reduces pressure inside empty polling iterations.
+
+IOHandler defaults to Blocking for construction and other existing callers.
+Interrupted/retryable poll errors, accepted-prefix drains, permanent-error
+cleanup, request lifetime barriers and completion result checks are preserved.
+No diagnostic environment variable or per-wait benchmark counter is required.
+
+Busy polling can keep more CPU cores active. Results depend on scheduling and
+CPU power policy; record both throughput and CPU time when benchmarking.
+Validation records: /home/kdr/allianceann/experiments/deep_busy_full_20261031

@@ -1,0 +1,12 @@
+{
+  "dataset": "arxiv2m",
+  "memory_max_bytes": 1073741824,
+  "paths": {
+    "index_run_root": "/SSD/kdr/allianceann/arxiv2m/script_runs"
+  },
+  "index": {
+    "graph_file": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/graph.bin",
+    "meta_file": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/meta.bin",
+    "ml_graph_file": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/ml_graph.bin"
+  }
+}

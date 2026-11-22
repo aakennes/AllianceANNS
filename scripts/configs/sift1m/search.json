@@ -1,0 +1,13 @@
+{
+  "parameters": {
+    "space": "l2",
+    "beam_width": 8,
+    "skip_extra_level_io": 1,
+    "rerank_beam_width": 8,
+    "rabitq_centroids": "/SSD/SIFT1M/Centroids/base.1M.centroids128.fvecs",
+    "rabitq_cids": "/SSD/SIFT1M/Centroids/base.1M.cids128.ivecs"
+  },
+  "quant_checkpoint": "/home/kdr/allianceann/logs/p1_stage_attribution_20261018/sift1m_quantization.bin",
+  "fingerprint": "6048465399133568127",
+  "index_version": "clustered IVF/RaBitQ"
+}

@@ -1,0 +1,7 @@
+{
+  "parameters": {
+    "shuffle_mem_gb": 1,
+    "space": "l2"
+  },
+  "static_budget_bytes": 134217728
+}

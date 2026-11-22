@@ -1,0 +1,111 @@
+Main disk builder: LeftStream + Vamana overlapping partition + ClusterWoW (2026-11-14)
+
+IMPLEMENTED
+The public alliance_build_disk CLI and SIFT1M/Arxiv2M/Deep10M JSON presets now
+support only --cluster_builder wow --cluster_partition vamana. Membership count is fixed at two.
+All layers share M (default 32). Each cluster uses floor(2*M/3), including the
+highest layer. Merge deduplicates global IDs, shuffles the union and retains at
+most M. The seed is {20261026, global rank, layer}; given identical input lists,
+merge selection is reproducible. Parallel WoW and random partition training
+can still produce different graphs across builds.
+
+Native partitioning uses PipeANN-derived kmeans++/Elkan routines (20 iterations),
+a 1% random L2 training sample and nearest-two L2 membership. K starts at 3
+(2 for a two-point input) and grows until AllianceANN's WHOLE-PROCESS model fits.
+It estimates the maximum cluster size using another random sample, then checks
+the actual maximum after full assignment. No capacity reassignment is performed.
+This retains the partitioning method; it does not promise identical random
+centers or the historical K=24. It does not use the old 0.5-GiB shard heuristic.
+The wrapper's MemoryMax remains the hard RSS limit: Arxiv2M 1 GiB, Deep10M 4 GiB.
+The read-only memory table is provisional; actual memberships are checked during
+construction. Native synthesis checks sample/Elkan allocations against the
+remaining whole-process budget. Unsupported training geometry is rejected.
+
+Search RaBitQ centroids/cids are independent. To reuse a partition, supply BOTH
+--cluster_centroids <fvecs> and --cluster_cids <ivecs with exactly 2 IDs per row>.
+Native partition artifacts are saved as graph.bin.partition.centroids.fvecs and
+graph.bin.partition.memberships.ivecs (original input-label order).
+The native path writes no unused per-cluster vector dump during partitioning.
+Upper construction distributes compact inputs from the resident graph after
+partitioning, then reads each cluster region sequentially (details below).
+
+RETIRED PATHS (2026-11-14)
+The old ivf_scan builder, direct_inherit partition, subcluster/leaf preparation,
+and build-side RaBitQ codes are removed. Their CLI parameters fail explicitly,
+including --cluster_np, --cluster_balance, --rabitq_build, --cluster_sub_K,
+--cluster_top_k_exact, --leaf_budget, --leaf_budget_top and --cluster_prep_dump_dir.
+Search RaBitQ (--centroids/--cids/--rabitq_bits), canonical metadata, existing
+raw indexes and query layouts are unchanged. Source clients must relink after
+API cleanup; historical experiments keep their frozen binaries/indexes.
+No old IVF checkpoint may be silently continued with the replacement policy.
+
+SEQUENTIAL CLUSTER INPUTS (IMPLEMENTED 2026-10-28)
+After all resident layers finish, scan the raw graph once in global rank order
+with a double-buffered 4-MiB reader. Take vector and highest resident-layer seed
+IDs from the same node page. Distribute one compact record per membership:
+[global rank u32][seed degree u32][vector][M global neighbor IDs]. Unused seed
+slots are zero. Only same-cluster seed endpoints survive loading. Seed distances
+are recomputed after every vector in that cluster is loaded; staging reuses the
+existing seed adjacency slots instead of allocating another cluster_size*M array.
+The original Seed/pruning/refinement and merge-selection algorithms are retained.
+
+A private graph.bin.cluster-scratch.<unique>/input.records has a separate 512-byte-aligned,
+contiguous region for each cluster. Each region is appended in rank order. A
+shared async queue and paired per-cluster buffers bound total distribution
+buffers to 32 MiB (at most 1 MiB per buffer); the 8-MiB scan reader, requests,
+record scratch and cluster-region metadata are additionally charged to the
+whole-process memory model. These are forward streams whose writes interleave
+across clusters, not one globally contiguous write stream. Each cluster input
+is consumed once with a double-buffered 4-MiB reader. The shared temporary is
+unlinked when Pass A ends or normal exception unwinding occurs; its regions
+remain allocated until then. An unclean kill may leave this private temporary.
+The generation manifest records exact file identities and process boot/PID/start
+identity. scripts/cleanup_cluster_scratch.py defaults to inspection; --apply may
+remove only a validated generation whose owner has exited. It is not a resume
+checkpoint. No filename glob cleanup or direct raw-vector gather is used.
+For Arxiv2M, d=384/M=32, record_bytes=1672; 2n records total 6.660 GiB before
+sector padding. Include this extra temporary in peak SSD-space estimates.
+
+Cluster WoW stays in RAM and spills rank-ordered target lists as before.
+Final merging keeps one forward reader per cluster.N spill and retains the existing
+raw-record ABI. Each 64-node contiguous raw block now uses one extent read and
+one extent write (256 KiB for 4-KiB nodes), with completion-length checks and
+an fsync after commit. At the last membership of a cluster, its final record is
+copied into the merge block, the reader drains/closes, and that exact spill is
+unlinked. This shortens the lifetime of consumed spills; it does not remove the
+full cinput peak before Pass A. Lower layers, vectors and padding remain bytewise.
+For n=2,138,591 this reduces raw commit requests per direction from n to
+ceil(n/64)=33,416; bytes per direction remain 8.158 GiB. The last block is short.
+
+[ClusterInputIO] and [ClusterCommitIO] report application-level data requests,
+not physical SSD commands. The distribution replaces per-cluster sparse vector
+and seed-page gathers. Vamana is the sole current upper-layer path; the former
+direct_inherit/IVF loaders are retired.
+No reserved upper-layer slots or final query-layout fields have been removed.
+
+The default Vamana spill is now ID-only: 268 bytes per membership for two
+target layers at M=32, 1.068 GiB per direction at Arxiv2M, versus the previous
+524 bytes / 2.087 GiB. M-slot capacity padding is retained. Actual upper raw
+distances are omitted (slots zeroed), with an optional metadata marker and
+exact reconstruction for explicit export/verification. See edge_distance_storage.txt.
+
+REMOVING RESERVED UPPER SPACE (DESIGN, NOT IMPLEMENTED)
+Upper-layer slots are unnecessary in a NEW intermediate format: preserve compact
+resident layers, build/merge upper lists into a separate rank-ordered file, then
+join them to generate the final query layout. The joined writer must replace
+the existing raw-graph patch and shuffle-reader interfaces. Checkpoint/resume
+must record which layers and record geometry the intermediate actually stores.
+
+Simply shortening the raw record is insufficient. Current EdgeOffsetInRecord,
+vector offset, metadata, resume and shuffle assume all layers' slots exist.
+Arxiv2M has a 3096-byte full raw record versus 2576 bytes for L0-L3+vector;
+both still occupy a 4096-byte node page with the configured one-node-per-page
+layout. Removing 520 bytes of logical padding alone does not reduce raw file
+size or full-page I/O. Pack the intermediate records (or separate vectors and
+layer files) to obtain that physical saving. The final query layout still needs
+space for every real layer, including upper layers; only premature empty slots
+and the merge's read-modify-write can be eliminated.
+
+Possible later work: compact lower/upper artifacts and a streaming final-layout
+exporter. These are separate from the implemented sequential-input optimization.
+Treat G0 shuffle as a separate I/O stage.

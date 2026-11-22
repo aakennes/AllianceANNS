@@ -1,0 +1,32 @@
+build/
+build_prof/
+.cache/
+compile_commands.json
+*.o
+*.a
+*.so
+*.dylib
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Generated local experiments.
+/build*/
+/runs/
+/*.log
+__pycache__/
+*.pyc
+/result/
+
+# Local historical audits and superseded experiment notes.
+/docs/refactor_round1.md
+/docs/refactor_round2.md
+/docs/refactor_round3.md
+/docs/round1_metadata_codec.md
+/docs/round1_mixed_pages.md
+/docs/review_cleanup_20261114.md
+/docs/pipeline_cleanup_20261114.md
+/docs/historical_disk_search_defaults.md
+/docs/uniform_layer_degree.txt
+/docs/rabitq_native_todo.txt

@@ -1,0 +1,52 @@
+{
+  "source_only": true,
+  "remote_sha256_verified": true,
+  "sources": [
+    {
+      "source": "/home/kdr/allianceann/experiments/laion10m_landing_selectivities_20261112/benchmark_low_ef.json",
+      "sha256": "a1f2b95c26aa17bcff3f88d7829f4b3b2104a2668c362f8bc81fb76dec06882e",
+      "local": "laion_compile.json"
+    },
+    {
+      "source": "/home/kdr/allianceann/experiments/laion10m_sensitivity_20261112/search_disk_checkpoint.hpp",
+      "sha256": "e9677710a0afcadd2f6044762d0678db23b42a588040573f7e8d34a100534483",
+      "local": "laion_checkpoint.hpp"
+    },
+    {
+      "source": "/home/kdr/allianceann/experiments/rabitq_single_ablation_20261101/src/search_disk_checkpoint.hpp",
+      "sha256": "46dc4c10819223ebbc3f0905397db2d031eb776b0a949fb0cd0dcecda0dae0d7",
+      "local": "arxiv_checkpoint.hpp"
+    },
+    {
+      "source": "/home/kdr/allianceann/experiments/laion10m_sensitivity_20261112/phase_memory.hpp",
+      "sha256": "01161269682c864063824e19d61f23f533401e46be9857d9cdff7fa32d73d901",
+      "local": "phase_memory.hpp"
+    },
+    {
+      "source": "/home/kdr/allianceann/experiments/laion10m_landing_selectivities_20261112/benchmark_low_ef.cpp",
+      "sha256": "172e13e8c05711ba4f243799286854164e8cb293df341907298acd63825970b4",
+      "local": "laion_benchmark_low_ef.cpp"
+    },
+    {
+      "source": "/home/kdr/allianceann/experiments/rabitq_single_ablation_20261101/src/search.cpp",
+      "sha256": "3223b67dfb322c30aca78096ff3c926339d04e99dc0214e9676ce182dba20481",
+      "local": "arxiv_search.cpp"
+    },
+    {
+      "source": "/home/kdr/allianceann/experiments/laion10m_sensitivity_20261112/io_observer.hpp",
+      "sha256": "6a5fba168d3adbba7a48e4b40931534dba95a0c4addf3fccd4f81db46d2ed011",
+      "local": "io_observer.hpp"
+    },
+    {
+      "source": "/home/kdr/allianceann/experiments/rabitq_single_ablation_20261101/compile/search.commands.json",
+      "sha256": "e06744031448050b82edd9caa24b1aaea06a3e0a2856c20fa2536c5bd98ec820",
+      "local": "arxiv_compile.json"
+    },
+    {
+      "source": "/home/kdr/allianceann/experiments/laion10m_sensitivity_20261112/io_observer.cpp",
+      "sha256": "63b5ee96abd9145dfed3f27027d16050546cf51a89c6f296f8d0cab84f20d2f5",
+      "local": "io_observer.cpp"
+    }
+  ],
+  "verification_date": "2026-11-14"
+}

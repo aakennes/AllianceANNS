@@ -1,0 +1,1126 @@
+{
+  "schema_version": 1,
+  "mode": "manifest-only",
+  "path_roots": {
+    "experiments": "/home/kdr/allianceann/experiments",
+    "data": "/SSD/CaseLaw"
+  },
+  "common": {
+    "dataset": "caselaw",
+    "bits": 1,
+    "threads": 1,
+    "k": 10,
+    "queries": 6734,
+    "beam": 8,
+    "metric": "l2",
+    "memory": {
+      "loading": {
+        "enforcement": "cgroup_memory_max",
+        "limit_bytes": 9663676416,
+        "swap_max_bytes": 0
+      },
+      "search": {
+        "enforcement": "rss_acceptance",
+        "limit_bytes": 3221225472,
+        "cgroup_memory_max": "max",
+        "reset_peak_per_batch": true
+      }
+    },
+    "cache_lifecycle": {
+      "dynamic_clear_per_query": false,
+      "dynamic_clear_per_ef": true,
+      "dynamic_clear_per_repeat": true,
+      "empty_dynamic_before_timing": true,
+      "dynamic_auto_size": false,
+      "static_cache_reused": true
+    },
+    "aggregation": {
+      "policy": "qps-paired-trim",
+      "repeats": 5,
+      "retained_repeats": 3,
+      "rank_by": [
+        "qps",
+        "repeat"
+      ],
+      "all_repeats_must_validate": true
+    },
+    "warmup_queries": 0,
+    "timing": {
+      "unit": "native query batch",
+      "includes": [
+        "IO observer",
+        "in-batch GT validation"
+      ],
+      "excludes": [
+        "loading",
+        "raw output export",
+        "independent exact-L2 replay"
+      ],
+      "p95_aggregation": "mean of retained batch P95; not pooled-query P95"
+    },
+    "input_paths": {
+      "query": "{data}/rfann_date_only_6734/query.fvecs",
+      "checkpoint": "{data}/alliance_rabitq12_20261106/rabitq1.bin",
+      "graph": "{data}/alliance_wp6_m32_efc256_b10g_20261106/graph.bin",
+      "meta": "{data}/alliance_wp6_m32_efc256_b10g_20261106/meta.bin",
+      "ml_graph": "{data}/alliance_wp6_m32_efc256_b10g_20261106/shuffle_e4k_v8k_20261106/ml_graph.bin"
+    }
+  },
+  "profiles": {
+    "origin": {
+      "workload": "origin",
+      "algorithms": [
+        "allianceann",
+        "pipewow"
+      ],
+      "efs": {
+        "allianceann": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          17,
+          20,
+          24,
+          29,
+          33,
+          38,
+          45,
+          55,
+          70,
+          98,
+          165,
+          512
+        ],
+        "pipewow": [
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          22,
+          25,
+          29,
+          34,
+          41,
+          54,
+          64,
+          76,
+          96,
+          133,
+          213,
+          512
+        ]
+      },
+      "cache_budgets": {
+        "allianceann": {
+          "static_bytes": 838860800,
+          "dynamic_bytes": 8388608
+        },
+        "pipewow": {
+          "static_bytes": 0,
+          "dynamic_bytes": 889192448
+        }
+      },
+      "cache_policies": [
+        "landing"
+      ],
+      "routing": {
+        "filter_mode": "auto",
+        "prefilter_threshold": 8192,
+        "top_layer_postfilter": 1,
+        "require_zero_prefilter_queries": false
+      },
+      "input_paths": {
+        "ranges": "{data}/rfann_date_only_6734/query.ranges.ibin",
+        "gt": "{data}/rfann_date_only_6734/gt.top10.ivecs",
+        "static_caches": {
+          "landing": "{data}/alliance_pipewow_rss3_bit1_20261106/static_838860800.layout"
+        }
+      },
+      "driver_dependencies": [
+        {
+          "role": "allianceann frozen binary",
+          "path": "{experiments}/caselaw_origin_rss3_fixed20_r5_trim3_20261106/allianceann_benchmark",
+          "sha256": "3b8854975a2abdd210c5463ec316ec78c3ab2ed855840f693b21179f25eb3c64"
+        },
+        {
+          "role": "pipewow frozen binary",
+          "path": "{experiments}/caselaw_origin_rss3_fixed20_r5_trim3_20261106/pipewow_benchmark",
+          "sha256": "5c8bf8aa86b35a19010716ce29f97c3bad02c28d7aed23a1727f0d82503b5eb1"
+        },
+        {
+          "role": "historical orchestrator (not imported)",
+          "path": "{experiments}/caselaw_origin_rss3_fixed20_r5_trim3_20261106/run.py",
+          "sha256": "507ff5fbe8600b68adbbae4284a1467329a022df5c0c7887ef77ea4f4e1713d1"
+        },
+        {
+          "role": "shared historical orchestrator (not imported)",
+          "path": "{experiments}/caselaw_selectivity_search_20261107/run.py",
+          "sha256": "fd6e5d6235f3ba0c565f63d4e4e41c166247e4777943abff58796926b8d862f0"
+        },
+        {
+          "role": "historical phase scope helper",
+          "path": "{experiments}/caselaw_origin_rss3_fixed20_r5_trim3_20261106/scope_entry.py",
+          "sha256": "4f3884492c7164b6a847b14f5851fc3248fcf7e92ae28fc144211136aa89f1ac"
+        }
+      ],
+      "sources": {
+        "request": {
+          "file": "reference/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json",
+          "sha256": "189db328067a2e379cc71e668ffbf012404d1e032852aa4be323483cb34cd276",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json"
+        },
+        "cache_lifecycle_request": {
+          "file": "reference/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json",
+          "sha256": "189db328067a2e379cc71e668ffbf012404d1e032852aa4be323483cb34cd276",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json"
+        },
+        "native_option_defaults": {
+          "file": "reference/origin_search_disk_options.hpp",
+          "sha256": "eaa144ebf049b3f0253f9a335f49b9cdcc9222d793d4e875f9c227a0a118d32c",
+          "historical_path": "local frozen reference_caselaw/src/example/search_disk_options.hpp"
+        }
+      },
+      "request_bindings": {
+        "bits": {
+          "source": "request",
+          "pointer": "bits"
+        },
+        "threads": {
+          "source": "request",
+          "pointer": "threads"
+        },
+        "beam": {
+          "source": "request",
+          "pointer": "beam"
+        },
+        "efs/allianceann": {
+          "source": "request",
+          "pointer": "selected_efs/allianceann"
+        },
+        "cache_budgets/allianceann/static_bytes": {
+          "source": "request",
+          "pointer": "cache_budget_plans/0/static_budget_bytes"
+        },
+        "cache_budgets/allianceann/dynamic_bytes": {
+          "source": "request",
+          "pointer": "cache_budget_plans/0/dynamic_cache_budget_bytes"
+        },
+        "efs/pipewow": {
+          "source": "request",
+          "pointer": "selected_efs/pipewow"
+        },
+        "cache_budgets/pipewow/static_bytes": {
+          "source": "request",
+          "pointer": "cache_budget_plans/1/static_budget_bytes"
+        },
+        "cache_budgets/pipewow/dynamic_bytes": {
+          "source": "request",
+          "pointer": "cache_budget_plans/1/dynamic_cache_budget_bytes"
+        },
+        "queries": {
+          "source": "request",
+          "pointer": "queries_per_repeat"
+        },
+        "memory/search/limit_bytes": {
+          "source": "request",
+          "pointer": "search_rss_limit_bytes"
+        },
+        "memory/loading/limit_bytes": {
+          "source": "request",
+          "pointer": "loading_scope_limit_bytes"
+        },
+        "aggregation/repeats": {
+          "source": "request",
+          "pointer": "repeats"
+        },
+        "aggregation/retained_repeats": {
+          "source": "request",
+          "pointer": "retained_repeats"
+        },
+        "cache_lifecycle/dynamic_clear_per_query": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_query"
+        },
+        "cache_lifecycle/dynamic_clear_per_ef": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_EF"
+        },
+        "cache_lifecycle/dynamic_clear_per_repeat": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_repeat"
+        }
+      }
+    },
+    "p1": {
+      "workload": "p1",
+      "algorithms": [
+        "allianceann",
+        "pipewow",
+        "pipeannfilter"
+      ],
+      "efs": {
+        "pipewow": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          27,
+          31,
+          35,
+          40,
+          48,
+          57,
+          72,
+          98,
+          137,
+          223,
+          512
+        ],
+        "pipeannfilter": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          26,
+          29,
+          32,
+          36,
+          41,
+          49,
+          59,
+          78,
+          110,
+          183,
+          512
+        ],
+        "allianceann": [
+          16,
+          17,
+          18,
+          19,
+          21,
+          23,
+          26,
+          28,
+          30,
+          34,
+          39,
+          46,
+          55,
+          66,
+          74,
+          83,
+          106,
+          148,
+          236,
+          512
+        ]
+      },
+      "cache_budgets": {
+        "allianceann": {
+          "static_bytes": 838860800,
+          "dynamic_bytes": 8388608
+        },
+        "pipewow": {
+          "static_bytes": 0,
+          "dynamic_bytes": 889192448
+        },
+        "pipeannfilter": {
+          "static_bytes": 1308622848,
+          "dynamic_bytes": 0
+        }
+      },
+      "cache_policies": [
+        "landing"
+      ],
+      "routing": {
+        "filter_mode": "auto",
+        "prefilter_threshold": 8192,
+        "top_layer_postfilter": 0,
+        "require_zero_prefilter_queries": true
+      },
+      "input_paths": {
+        "ranges": "{data}/selectivity_inputs_20261107/caselaw_p1.ranges.ibin",
+        "gt": "{data}/selectivity_inputs_20261107/caselaw_p1.k10.gt.ivecs",
+        "static_caches": {
+          "landing": "{data}/caselaw_selectivity_search_20261107/p1/static_838860800.layout"
+        }
+      },
+      "driver_dependencies": [
+        {
+          "role": "allianceann frozen binary",
+          "path": "{experiments}/caselaw_p1_postfilter_off_final_20261107/allianceann_benchmark",
+          "sha256": "9d271029b31f48dbbbcddd1bec3dde108b589b419f1f59e7310ee64c7d5ef9ae"
+        },
+        {
+          "role": "pipewow frozen binary",
+          "path": "{experiments}/caselaw_selectivity_search_20261107/pipewow_benchmark",
+          "sha256": "8b371ac46593a3c9eab75f5408a4e684ab1779dc09765c2a376d95536e82a132"
+        },
+        {
+          "role": "pipeannfilter frozen binary",
+          "path": "{experiments}/caselaw_pipeannfilter_origin_rss3_ef20_r5_20261107/search",
+          "sha256": "32b9351bf0cadf794cdbf8c0d1c020b5cf9f5d07b0873c17144a6f853ba081e5"
+        },
+        {
+          "role": "historical orchestrator (not imported)",
+          "path": "{experiments}/caselaw_p1_postfilter_off_final_20261107/run.py",
+          "sha256": "da1963c655e0a7d30ae0e0c1d129d84606f5506fe16638acfac2ab02d38b49e7"
+        },
+        {
+          "role": "shared historical orchestrator (not imported)",
+          "path": "{experiments}/caselaw_selectivity_search_20261107/run.py",
+          "sha256": "fd6e5d6235f3ba0c565f63d4e4e41c166247e4777943abff58796926b8d862f0"
+        },
+        {
+          "role": "historical phase scope helper",
+          "path": "{experiments}/caselaw_origin_rss3_fixed20_r5_trim3_20261106/scope_entry.py",
+          "sha256": "4f3884492c7164b6a847b14f5851fc3248fcf7e92ae28fc144211136aa89f1ac"
+        }
+      ],
+      "sources": {
+        "request": {
+          "file": "reference/caselaw_p1_postfilter_off_final_20261107/request.json",
+          "sha256": "d556fabd3e90effe34516209b05aafa5e97e5df7fa57cbe3f5858dcd7359be2d",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_p1_postfilter_off_final_20261107/request.json"
+        },
+        "cache_lifecycle_request": {
+          "file": "reference/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json",
+          "sha256": "189db328067a2e379cc71e668ffbf012404d1e032852aa4be323483cb34cd276",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json"
+        },
+        "efs": {
+          "file": "reference/caselaw_p1_postfilter_off_final_20261107/coverage.json",
+          "sha256": "157ffb768de1de5f548255825c20cf251e125dafb090006d42dfb7d88eec942d",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_p1_postfilter_off_final_20261107/coverage.json"
+        }
+      },
+      "request_bindings": {
+        "bits": {
+          "source": "request",
+          "pointer": "bits"
+        },
+        "threads": {
+          "source": "request",
+          "pointer": "threads"
+        },
+        "beam": {
+          "source": "request",
+          "pointer": "beam"
+        },
+        "efs/allianceann": {
+          "source": "efs",
+          "pointer": "allianceann/efs"
+        },
+        "efs/pipewow": {
+          "source": "efs",
+          "pointer": "preserved_baseline_efs/pipewow"
+        },
+        "efs/pipeannfilter": {
+          "source": "efs",
+          "pointer": "preserved_baseline_efs/pipeannfilter"
+        },
+        "queries": {
+          "source": "request",
+          "pointer": "queries"
+        },
+        "aggregation/repeats": {
+          "source": "request",
+          "pointer": "repeats"
+        },
+        "aggregation/retained_repeats": {
+          "source": "request",
+          "pointer": "retained"
+        },
+        "cache_budgets/allianceann/static_bytes": {
+          "source": "request",
+          "pointer": "static_alliance"
+        },
+        "cache_budgets/allianceann/dynamic_bytes": {
+          "source": "request",
+          "pointer": "dynamic_alliance"
+        },
+        "cache_budgets/pipewow/dynamic_bytes": {
+          "source": "request",
+          "pointer": "dynamic_pipewow"
+        },
+        "cache_budgets/pipeannfilter/static_bytes": {
+          "source": "request",
+          "pointer": "static_pipeannfilter"
+        },
+        "memory/search/limit_bytes": {
+          "source": "request",
+          "pointer": "search_rss_bytes"
+        },
+        "memory/loading/limit_bytes": {
+          "source": "request",
+          "pointer": "loading_cgroup_bytes"
+        },
+        "routing/top_layer_postfilter": {
+          "source": "request",
+          "pointer": "top_layer_postfilter"
+        },
+        "cache_lifecycle/dynamic_clear_per_query": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_query"
+        },
+        "cache_lifecycle/dynamic_clear_per_ef": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_EF"
+        },
+        "cache_lifecycle/dynamic_clear_per_repeat": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_repeat"
+        }
+      }
+    },
+    "p4": {
+      "workload": "p4",
+      "algorithms": [
+        "allianceann",
+        "pipewow",
+        "pipeannfilter"
+      ],
+      "efs": {
+        "allianceann": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          23,
+          26,
+          29,
+          33,
+          37,
+          43,
+          51,
+          61,
+          76,
+          98,
+          127,
+          211,
+          294,
+          512
+        ],
+        "pipewow": [
+          24,
+          26,
+          29,
+          31,
+          34,
+          37,
+          41,
+          46,
+          52,
+          59,
+          68,
+          75,
+          83,
+          101,
+          123,
+          171,
+          206,
+          249,
+          352,
+          512
+        ],
+        "pipeannfilter": [
+          24,
+          25,
+          26,
+          28,
+          30,
+          33,
+          35,
+          38,
+          42,
+          47,
+          54,
+          61,
+          73,
+          91,
+          114,
+          128,
+          157,
+          236,
+          332,
+          512
+        ]
+      },
+      "cache_budgets": {
+        "allianceann": {
+          "static_bytes": 838860800,
+          "dynamic_bytes": 8388608
+        },
+        "pipewow": {
+          "static_bytes": 0,
+          "dynamic_bytes": 889192448
+        },
+        "pipeannfilter": {
+          "static_bytes": 1308622848,
+          "dynamic_bytes": 0
+        }
+      },
+      "cache_policies": [
+        "landing"
+      ],
+      "routing": {
+        "filter_mode": "auto",
+        "prefilter_threshold": 8192,
+        "top_layer_postfilter": 0,
+        "require_zero_prefilter_queries": false
+      },
+      "input_paths": {
+        "ranges": "{data}/selectivity_inputs_20261107/caselaw_p4.ranges.ibin",
+        "gt": "{data}/selectivity_inputs_20261107/caselaw_p4.k10.gt.ivecs",
+        "static_caches": {
+          "landing": "{data}/caselaw_p4_p7_p10_final_20261108/p4/static_838860800.layout"
+        }
+      },
+      "driver_dependencies": [
+        {
+          "role": "allianceann frozen binary",
+          "path": "{experiments}/caselaw_p4_p7_p10_final_20261108/allianceann_benchmark",
+          "sha256": "9d271029b31f48dbbbcddd1bec3dde108b589b419f1f59e7310ee64c7d5ef9ae"
+        },
+        {
+          "role": "pipewow frozen binary",
+          "path": "{experiments}/caselaw_selectivity_search_20261107/pipewow_benchmark",
+          "sha256": "8b371ac46593a3c9eab75f5408a4e684ab1779dc09765c2a376d95536e82a132"
+        },
+        {
+          "role": "pipeannfilter frozen binary",
+          "path": "{experiments}/caselaw_pipeannfilter_origin_rss3_ef20_r5_20261107/search",
+          "sha256": "32b9351bf0cadf794cdbf8c0d1c020b5cf9f5d07b0873c17144a6f853ba081e5"
+        },
+        {
+          "role": "historical orchestrator (not imported)",
+          "path": "{experiments}/caselaw_p4_p7_p10_final_20261108/run.py",
+          "sha256": "7c9a64ddbaf76b82f326f469ff2c39580756f91c31750c6506bd49267d20cab0"
+        },
+        {
+          "role": "shared historical orchestrator (not imported)",
+          "path": "{experiments}/caselaw_selectivity_search_20261107/run.py",
+          "sha256": "fd6e5d6235f3ba0c565f63d4e4e41c166247e4777943abff58796926b8d862f0"
+        },
+        {
+          "role": "historical phase scope helper",
+          "path": "{experiments}/caselaw_origin_rss3_fixed20_r5_trim3_20261106/scope_entry.py",
+          "sha256": "4f3884492c7164b6a847b14f5851fc3248fcf7e92ae28fc144211136aa89f1ac"
+        }
+      ],
+      "sources": {
+        "request": {
+          "file": "reference/caselaw_p4_p7_p10_final_20261108/request.json",
+          "sha256": "f22dcaaee4acbf8539d31c69ff928697b5ee3c200b041ba233d0623c83f0212e",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_p4_p7_p10_final_20261108/request.json"
+        },
+        "cache_lifecycle_request": {
+          "file": "reference/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json",
+          "sha256": "189db328067a2e379cc71e668ffbf012404d1e032852aa4be323483cb34cd276",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json"
+        },
+        "efs": {
+          "file": "reference/caselaw_p4_p7_p10_final_20261108/p4_coverage.json",
+          "sha256": "0fbe5b8bf00629b37711c9b99fc2f79763f0e24ee4b83f726f2fd7f8299f22d3",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_p4_p7_p10_final_20261108/p4/coverage.json"
+        }
+      },
+      "request_bindings": {
+        "bits": {
+          "source": "request",
+          "pointer": "bits"
+        },
+        "threads": {
+          "source": "request",
+          "pointer": "threads"
+        },
+        "beam": {
+          "source": "request",
+          "pointer": "beam"
+        },
+        "efs/allianceann": {
+          "source": "efs",
+          "pointer": "allianceann/efs"
+        },
+        "efs/pipewow": {
+          "source": "efs",
+          "pointer": "pipewow/efs"
+        },
+        "efs/pipeannfilter": {
+          "source": "efs",
+          "pointer": "pipeannfilter/efs"
+        },
+        "queries": {
+          "source": "request",
+          "pointer": "queries"
+        },
+        "aggregation/repeats": {
+          "source": "request",
+          "pointer": "repeats"
+        },
+        "aggregation/retained_repeats": {
+          "source": "request",
+          "pointer": "retained"
+        },
+        "cache_budgets/allianceann/static_bytes": {
+          "source": "request",
+          "pointer": "static_alliance"
+        },
+        "cache_budgets/allianceann/dynamic_bytes": {
+          "source": "request",
+          "pointer": "dynamic_alliance"
+        },
+        "cache_budgets/pipewow/dynamic_bytes": {
+          "source": "request",
+          "pointer": "dynamic_pipewow"
+        },
+        "cache_budgets/pipeannfilter/static_bytes": {
+          "source": "request",
+          "pointer": "static_pipeannfilter"
+        },
+        "memory/search/limit_bytes": {
+          "source": "request",
+          "pointer": "search_rss_bytes"
+        },
+        "memory/loading/limit_bytes": {
+          "source": "request",
+          "pointer": "loading_cgroup_bytes"
+        },
+        "routing/top_layer_postfilter": {
+          "source": "request",
+          "pointer": "top_layer_postfilter"
+        },
+        "cache_lifecycle/dynamic_clear_per_query": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_query"
+        },
+        "cache_lifecycle/dynamic_clear_per_ef": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_EF"
+        },
+        "cache_lifecycle/dynamic_clear_per_repeat": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_repeat"
+        }
+      }
+    },
+    "p7": {
+      "workload": "p7",
+      "algorithms": [
+        "allianceann",
+        "pipewow",
+        "pipeannfilter"
+      ],
+      "efs": {
+        "allianceann": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          19,
+          22,
+          26,
+          32,
+          39,
+          46,
+          56,
+          69,
+          94,
+          128,
+          256
+        ],
+        "pipewow": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          26,
+          29,
+          32,
+          36,
+          41,
+          49,
+          59,
+          77,
+          108,
+          177,
+          512
+        ],
+        "pipeannfilter": [
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          55,
+          57,
+          59,
+          61,
+          63,
+          80,
+          128
+        ]
+      },
+      "cache_budgets": {
+        "allianceann": {
+          "static_bytes": 838860800,
+          "dynamic_bytes": 8388608
+        },
+        "pipewow": {
+          "static_bytes": 0,
+          "dynamic_bytes": 889192448
+        },
+        "pipeannfilter": {
+          "static_bytes": 1308622848,
+          "dynamic_bytes": 0
+        }
+      },
+      "cache_policies": [
+        "landing"
+      ],
+      "routing": {
+        "filter_mode": "auto",
+        "prefilter_threshold": 8192,
+        "top_layer_postfilter": 0,
+        "require_zero_prefilter_queries": false
+      },
+      "input_paths": {
+        "ranges": "{data}/selectivity_inputs_20261107/caselaw_p7.ranges.ibin",
+        "gt": "{data}/selectivity_inputs_20261107/caselaw_p7.k10.gt.ivecs",
+        "static_caches": {
+          "landing": "{data}/caselaw_p4_p7_p10_final_20261108/p7/static_838860800.layout"
+        }
+      },
+      "driver_dependencies": [
+        {
+          "role": "allianceann frozen binary",
+          "path": "{experiments}/caselaw_p4_p7_p10_final_20261108/allianceann_benchmark",
+          "sha256": "9d271029b31f48dbbbcddd1bec3dde108b589b419f1f59e7310ee64c7d5ef9ae"
+        },
+        {
+          "role": "pipewow frozen binary",
+          "path": "{experiments}/caselaw_selectivity_search_20261107/pipewow_benchmark",
+          "sha256": "8b371ac46593a3c9eab75f5408a4e684ab1779dc09765c2a376d95536e82a132"
+        },
+        {
+          "role": "pipeannfilter frozen binary",
+          "path": "{experiments}/caselaw_pipeannfilter_origin_rss3_ef20_r5_20261107/search",
+          "sha256": "32b9351bf0cadf794cdbf8c0d1c020b5cf9f5d07b0873c17144a6f853ba081e5"
+        },
+        {
+          "role": "historical orchestrator (not imported)",
+          "path": "{experiments}/caselaw_p4_p7_p10_final_20261108/run.py",
+          "sha256": "7c9a64ddbaf76b82f326f469ff2c39580756f91c31750c6506bd49267d20cab0"
+        },
+        {
+          "role": "shared historical orchestrator (not imported)",
+          "path": "{experiments}/caselaw_selectivity_search_20261107/run.py",
+          "sha256": "fd6e5d6235f3ba0c565f63d4e4e41c166247e4777943abff58796926b8d862f0"
+        },
+        {
+          "role": "historical phase scope helper",
+          "path": "{experiments}/caselaw_origin_rss3_fixed20_r5_trim3_20261106/scope_entry.py",
+          "sha256": "4f3884492c7164b6a847b14f5851fc3248fcf7e92ae28fc144211136aa89f1ac"
+        }
+      ],
+      "sources": {
+        "request": {
+          "file": "reference/caselaw_p4_p7_p10_final_20261108/request.json",
+          "sha256": "f22dcaaee4acbf8539d31c69ff928697b5ee3c200b041ba233d0623c83f0212e",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_p4_p7_p10_final_20261108/request.json"
+        },
+        "cache_lifecycle_request": {
+          "file": "reference/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json",
+          "sha256": "189db328067a2e379cc71e668ffbf012404d1e032852aa4be323483cb34cd276",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json"
+        },
+        "efs": {
+          "file": "reference/caselaw_p4_p7_p10_final_20261108/p7_coverage.json",
+          "sha256": "7eee75b0ad7fba9c045f2c0fa52e7070b3a87d1b680677e9aabbbe003e8f6f41",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_p4_p7_p10_final_20261108/p7/coverage.json"
+        }
+      },
+      "request_bindings": {
+        "bits": {
+          "source": "request",
+          "pointer": "bits"
+        },
+        "threads": {
+          "source": "request",
+          "pointer": "threads"
+        },
+        "beam": {
+          "source": "request",
+          "pointer": "beam"
+        },
+        "efs/allianceann": {
+          "source": "efs",
+          "pointer": "allianceann/efs"
+        },
+        "efs/pipewow": {
+          "source": "efs",
+          "pointer": "pipewow/efs"
+        },
+        "efs/pipeannfilter": {
+          "source": "efs",
+          "pointer": "pipeannfilter/efs"
+        },
+        "queries": {
+          "source": "request",
+          "pointer": "queries"
+        },
+        "aggregation/repeats": {
+          "source": "request",
+          "pointer": "repeats"
+        },
+        "aggregation/retained_repeats": {
+          "source": "request",
+          "pointer": "retained"
+        },
+        "cache_budgets/allianceann/static_bytes": {
+          "source": "request",
+          "pointer": "static_alliance"
+        },
+        "cache_budgets/allianceann/dynamic_bytes": {
+          "source": "request",
+          "pointer": "dynamic_alliance"
+        },
+        "cache_budgets/pipewow/dynamic_bytes": {
+          "source": "request",
+          "pointer": "dynamic_pipewow"
+        },
+        "cache_budgets/pipeannfilter/static_bytes": {
+          "source": "request",
+          "pointer": "static_pipeannfilter"
+        },
+        "memory/search/limit_bytes": {
+          "source": "request",
+          "pointer": "search_rss_bytes"
+        },
+        "memory/loading/limit_bytes": {
+          "source": "request",
+          "pointer": "loading_cgroup_bytes"
+        },
+        "routing/top_layer_postfilter": {
+          "source": "request",
+          "pointer": "top_layer_postfilter"
+        },
+        "cache_lifecycle/dynamic_clear_per_query": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_query"
+        },
+        "cache_lifecycle/dynamic_clear_per_ef": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_EF"
+        },
+        "cache_lifecycle/dynamic_clear_per_repeat": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_repeat"
+        }
+      }
+    },
+    "p10": {
+      "workload": "p10",
+      "algorithms": [
+        "allianceann"
+      ],
+      "efs": {
+        "allianceann": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          20,
+          22,
+          24,
+          27,
+          30,
+          34,
+          40,
+          68,
+          128
+        ]
+      },
+      "cache_budgets": {
+        "allianceann": {
+          "static_bytes": 838860800,
+          "dynamic_bytes": 8388608
+        }
+      },
+      "cache_policies": [
+        "landing",
+        "equal"
+      ],
+      "routing": {
+        "filter_mode": "auto",
+        "prefilter_threshold": 1,
+        "top_layer_postfilter": 0,
+        "require_zero_prefilter_queries": true
+      },
+      "input_paths": {
+        "ranges": "{data}/selectivity_inputs_20261107/caselaw_p10.ranges.ibin",
+        "gt": "{data}/selectivity_inputs_20261107/caselaw_p10.k10.gt.ivecs",
+        "static_caches": {
+          "landing": "{data}/caselaw_p10_graph_probe_20261108/landing/static_838860800.layout",
+          "equal": "{data}/caselaw_equal_rss3_final_20261108/equal_838860800.layout"
+        }
+      },
+      "driver_dependencies": [
+        {
+          "role": "allianceann frozen binary",
+          "path": "{experiments}/caselaw_p4_p7_p10_final_20261108/allianceann_benchmark",
+          "sha256": "9d271029b31f48dbbbcddd1bec3dde108b589b419f1f59e7310ee64c7d5ef9ae"
+        },
+        {
+          "role": "historical orchestrator (not imported)",
+          "path": "{experiments}/caselaw_p10_graph_final_20261108/run.py",
+          "sha256": "f9acabc40bd53500f69cc54e69820dbc894a5d37c6fcd7178c4f25651416521d"
+        },
+        {
+          "role": "shared historical orchestrator (not imported)",
+          "path": "{experiments}/caselaw_selectivity_search_20261107/run.py",
+          "sha256": "fd6e5d6235f3ba0c565f63d4e4e41c166247e4777943abff58796926b8d862f0"
+        },
+        {
+          "role": "historical phase scope helper",
+          "path": "{experiments}/caselaw_origin_rss3_fixed20_r5_trim3_20261106/scope_entry.py",
+          "sha256": "4f3884492c7164b6a847b14f5851fc3248fcf7e92ae28fc144211136aa89f1ac"
+        }
+      ],
+      "sources": {
+        "request": {
+          "file": "reference/caselaw_p10_graph_final_20261108/request.json",
+          "sha256": "94551f2b2597b94924a77588cf282be297210d5651fb83dad00e8ed90230af93",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_p10_graph_final_20261108/request.json"
+        },
+        "cache_lifecycle_request": {
+          "file": "reference/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json",
+          "sha256": "189db328067a2e379cc71e668ffbf012404d1e032852aa4be323483cb34cd276",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_origin_rss3_fixed20_r5_trim3_20261106/request.json"
+        },
+        "efs": {
+          "file": "reference/caselaw_p10_graph_final_20261108/selected_efs.json",
+          "sha256": "c01b9b63698a322ea24bd10de0fda1f5ee274bf5b1c915a0e22d71076fdf8fad",
+          "historical_path": "/home/kdr/allianceann/experiments/caselaw_p10_graph_final_20261108/selected_efs.json"
+        }
+      },
+      "request_bindings": {
+        "bits": {
+          "source": "request",
+          "pointer": "bits"
+        },
+        "threads": {
+          "source": "request",
+          "pointer": "threads"
+        },
+        "beam": {
+          "source": "request",
+          "pointer": "beam"
+        },
+        "efs/allianceann": {
+          "source": "request",
+          "pointer": "formal_efs"
+        },
+        "cache_budgets/allianceann/static_bytes": {
+          "source": "request",
+          "pointer": "static_budget_bytes"
+        },
+        "cache_budgets/allianceann/dynamic_bytes": {
+          "source": "request",
+          "pointer": "dynamic_cache_bytes"
+        },
+        "routing/prefilter_threshold": {
+          "source": "request",
+          "pointer": "prefilter_threshold"
+        },
+        "routing/require_zero_prefilter_queries": {
+          "source": "request",
+          "pointer": "require_zero_prefilter_queries"
+        },
+        "queries": {
+          "source": "request",
+          "pointer": "queries_per_batch"
+        },
+        "aggregation/repeats": {
+          "source": "request",
+          "pointer": "formal_repeats"
+        },
+        "aggregation/retained_repeats": {
+          "source": "request",
+          "pointer": "retained_repeats"
+        },
+        "memory/search/limit_bytes": {
+          "source": "request",
+          "pointer": "search_rss_bytes"
+        },
+        "memory/loading/limit_bytes": {
+          "source": "request",
+          "pointer": "loading_cgroup_bytes"
+        },
+        "routing/top_layer_postfilter": {
+          "source": "request",
+          "pointer": "top_layer_postfilter"
+        },
+        "cache_lifecycle/dynamic_clear_per_query": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_query"
+        },
+        "cache_lifecycle/dynamic_clear_per_ef": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_EF"
+        },
+        "cache_lifecycle/dynamic_clear_per_repeat": {
+          "source": "cache_lifecycle_request",
+          "pointer": "cache_clear_per_repeat"
+        }
+      }
+    }
+  }
+}

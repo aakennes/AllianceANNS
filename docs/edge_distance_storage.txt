@@ -1,0 +1,41 @@
+SSD edge-distance policy (LeftStream-only builder, 2026-11-14)
+
+Historical two_pass indexes can retain stored exact edge distances. Their
+metadata remains readable by shuffle and search, but the original resident
+builder, enumeration and copy_top paths are retired. Such checkpoints cannot
+be resumed by the current builder.
+
+The sole left_stream resident builder keeps active-edge distances only in
+its resident buffers and writes zero into the existing SSD distance slots. Its
+metadata marks all layers ID-only after the fused resident pass completes. This
+differs from the two_pass policy above; no raw record offsets change.
+
+Omit distances on the default Vamana cluster path:
+- Seed reads only neighbor IDs; ClusterWowGraph::Seed computes exact distances
+  using cluster-resident vectors. It does not read lower stored distances.
+- All precise distances needed for search, RNG and reverse updates remain in RAM.
+- The cluster spill stores [rank][lengths][neighbor IDs], without dist_id_pair.
+- Merge uses IDs for deduplication, fixed-seed shuffle and truncation. It never
+  reconstructs edge distances or loads neighbor vectors.
+- Newly constructed upper raw layers retain existing field offsets, but their
+  obsolete distance slots are zero. No real upper distances are persisted.
+
+The optional metadata suffix is little-endian uint32 magic 0x31444945 ('EID1')
+and uint64 first ID-only layer. Metadata without this extension retains the old
+stored-distance interpretation. Raw node/page/neighbor offsets are unchanged.
+ReadEdgesWithDist returns exact distances: marked layers compute from vectors
+only when requested. Verification of new ID-only upper layers uses updated tools;
+old distance-consuming tools do not understand this optional metadata suffix.
+Query layouts already store neighbor IDs without these edge distances, and the
+query path/rerank policy is unaffected. Query-to-node distances are separate
+from the node-to-neighbor distances described here.
+
+For two cluster layers and M=32, fixed-size membership spill records change
+from 524 B to 268 B (-48.855%). At Arxiv2M n=2,138,591 and np=2, the logical spill
+size changes from 2.087 GiB to 1.068 GiB in EACH direction (write and read).
+This change retains the M-slot capacity padding and the existing 4-KiB raw node
+pages. It does not claim a raw graph file-size reduction or fewer seed gathers.
+Sequential compact cluster inputs were implemented separately on 2026-10-28;
+they contain no edge distances and replace the Vamana sparse seed/vector gathers.
+Removal of reserved upper-layer space remains unimplemented. See
+vamana_cluster_build.txt for the input streams and extent commit details.

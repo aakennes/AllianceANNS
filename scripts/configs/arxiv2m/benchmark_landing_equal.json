@@ -1,0 +1,270 @@
+{
+  "schema_version": 1,
+  "dataset": "arxiv2m",
+  "population": 2138591,
+  "dimension": 384,
+  "index_description": "Vamana-style partition, np=2, K=24, intra-cluster WoW, uniform M=32, k2m2 shuffled G0",
+  "binary": "/home/kdr/allianceann/experiments/arxiv_vamana_20261026/build/bin/alliance_search_disk",
+  "output_root": "/home/kdr/AllianceANN/result/allianceann/arxiv2m_landing_equal_resume_20261027_static480_limit1024",
+  "repeats": 5,
+  "warmup_runs": 0,
+  "aggregate": "trimmed_mean",
+  "threads": [
+    16
+  ],
+  "cpu_sets": {
+    "16": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ]
+  },
+  "efs": [
+    7,
+    10,
+    14,
+    20,
+    28,
+    40,
+    60,
+    80,
+    100,
+    120,
+    160,
+    240,
+    320
+  ],
+  "summary_recall_stop": 0.995,
+  "memory_max_bytes": 1073741824,
+  "timeout_seconds": 7200,
+  "static_cache_budget_bytes": 503316480,
+  "quantization_fingerprint": "10098393076588577011",
+  "environment": {
+    "OMP_DYNAMIC": "FALSE",
+    "OMP_PROC_BIND": "FALSE",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "LC_ALL": "C"
+  },
+  "parameters": {
+    "graph_file": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/graph.bin",
+    "meta_file": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/meta.bin",
+    "ml_graph_file": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/ml_graph.bin",
+    "ml_meta_file": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/equal/164333e12b14b24c1cd79301f063cfc0c2124f50ca4ea95d05aa1da265324b5f/static_503316480.layout",
+    "query_vec": "/SSD/Arxiv/test.fvecs",
+    "k": 10,
+    "space": "ip",
+    "pipeline": 1,
+    "beam_width": 8,
+    "ml_cache_total_bytes": 8388608,
+    "ml_cache_policy": "fifo",
+    "per_query_cache": true,
+    "ml_cache_auto": 1,
+    "skip_extra_level_io": 1,
+    "rerank_num": 0,
+    "filter_mode": "auto",
+    "prefilter_threshold": 8192,
+    "prefilter_rerank": 0,
+    "query_limit": 3389,
+    "rabitq_bits": 3,
+    "packed_rabitq": 1,
+    "top_layer_postfilter": 1,
+    "rerank_batch_blocks": 32,
+    "rerank_beam_width": 8,
+    "io_budget_total": 0,
+    "rabitq_centroids": "/SSD/Arxiv/Centroids/base.2M.centroids256.fvecs",
+    "rabitq_cids": "/SSD/Arxiv/Centroids/base.2M.cids256.ivecs",
+    "rerank_policy": "error_bound",
+    "rerank_float_refine": 1,
+    "rerank_reuse_estimates": 0,
+    "rerank_candidate_factor": 2,
+    "rerank_bound_prescreen": 1,
+    "rerank_bound_rank_factor": 1,
+    "rerank_warm_blocks": 0,
+    "quant_checkpoint": "/home/kdr/allianceann/logs/p1_stage_attribution_20261018/arxiv2m_quantization.bin",
+    "navigation_file": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/navigation.bin",
+    "navigation_ef": 64,
+    "navigation_budget": 256,
+    "navigation_count": 16,
+    "entry_sampling": "range",
+    "entry_samples": 0,
+    "entry_count": 0
+  },
+  "workloads": {
+    "origin": {
+      "query_rng": "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_origin.ranges.ibin",
+      "gt_file": "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_origin.k10.gt.ivecs"
+    },
+    "p1": {
+      "query_rng": "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p1.ranges.ibin",
+      "gt_file": "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p1.k10.gt.ivecs"
+    },
+    "p4": {
+      "query_rng": "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p4.ranges.ibin",
+      "gt_file": "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p4.k10.gt.ivecs"
+    },
+    "p7": {
+      "query_rng": "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p7.ranges.ibin",
+      "gt_file": "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p7.k10.gt.ivecs"
+    },
+    "p10": {
+      "query_rng": "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p10.ranges.ibin",
+      "gt_file": "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p10.k10.gt.ivecs"
+    }
+  },
+  "navigation_validator": [
+    "/home/kdr/allianceann/experiments/benchmark_prepare_20261027/validate_navigation"
+  ],
+  "additional_inputs": [
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/graph.bin.rawvecs",
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/graph.bin.buildvecs",
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/ml_graph.bin.layout"
+  ],
+  "inputs": {
+    "/SSD/Arxiv/Centroids/base.2M.centroids256.fvecs": {
+      "size": 394240,
+      "sha256": "062c6ca23c9a0a0a075c6da8bd01db5a36691c8760b31320968f815706301ade"
+    },
+    "/SSD/Arxiv/Centroids/base.2M.cids256.ivecs": {
+      "size": 17108728,
+      "sha256": "ed31e42f7bdf18891b817ea829ac8acf1c1f37090816bb7f16c49325eb57db9a"
+    },
+    "/SSD/Arxiv/test.fvecs": {
+      "size": 5219060,
+      "sha256": "79b44d6709d24f155eb0b583c33e74b2ea2eb65ce932cda9b31131aa9e3d3ab4"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_origin.k10.gt.ivecs": {
+      "size": 149116,
+      "sha256": "d79d4bbf21e68a5f68a9b98f88bbedabbf04411942dccb895e76496c89e09bcf"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_origin.ranges.ibin": {
+      "size": 27112,
+      "sha256": "3701bd2690d294559ac8225ec6e89ab30fb4a94c1f59f0ea7fd4e7450aef002f"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p1.k10.gt.ivecs": {
+      "size": 149116,
+      "sha256": "1d6651393900ed3d8382546a424640ae2859dd77b9f1cfbc991544ab3f7f1a31"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p1.ranges.ibin": {
+      "size": 27112,
+      "sha256": "4c85e6ab91a91c0ae055c9338c6f13ed621a2e69afc275afc673adef45585a57"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p10.k10.gt.ivecs": {
+      "size": 149116,
+      "sha256": "7e3cab0de40153e9fde823a17c21ccf16868546af9a3624e5ae30f05b664dfff"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p10.ranges.ibin": {
+      "size": 27112,
+      "sha256": "bb96e0df84e0d8021f34f088646633d75967f110041a31a96595e789532d3ea8"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p4.k10.gt.ivecs": {
+      "size": 149116,
+      "sha256": "bcaac3c19758ee9bce683408a741dfbce3fe0cfd43f2d72f11a60ed1e6de5e66"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p4.ranges.ibin": {
+      "size": 27112,
+      "sha256": "111fa648ebca1c0dd6818530196ea744e4b49978397259fb4ec94e8c4cfc75e7"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p7.k10.gt.ivecs": {
+      "size": 149116,
+      "sha256": "140f10cacfe8c8550f7d7022cc13c7243c4c5dbb9ec261cd57524814ddc926da"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/queries/final/arxiv2m_p7.ranges.ibin": {
+      "size": 27112,
+      "sha256": "b5951dd9254c73703bfd1074ebd6bf95bd72aed095bf05ea6ba02fecec89c674"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/graph.bin": {
+      "size": 8759676928,
+      "sha256": "fc4e2430ead3425d1448efd8a72637becb3c3f180f9d265355caa2c5e4f335c7"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/graph.bin.buildvecs": {
+      "size": 4379836416,
+      "sha256": "61103b8c05d4c2eb76e2a30db2d6f1f4f357cc1ec2aae3b67c0c01b6f80c0988"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/graph.bin.rawvecs": {
+      "size": 3284875776,
+      "sha256": "12f8fe954e2f9f7939c7d95cb1212364f4c797adf61c26d78766690b3a3fe700"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/meta.bin": {
+      "size": 42772057,
+      "sha256": "70ce916e13facb420a2d5614b056af1cd53de5a91b830fd71f7d7af6217674fe"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/ml_graph.bin": {
+      "size": 7508295680,
+      "sha256": "25ed06f2d2688ab667df037f51284a1a1a435b002243ce6d78b9701773944952"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/ml_graph.bin.layout": {
+      "size": 59880582,
+      "sha256": "03ca9adb87d7aa3458265038ac47cd9001deffea62823de3d8a3ea42a185e4e1"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/navigation.bin": {
+      "size": 15597768,
+      "sha256": "95abb054718d33a506b6981cd276caa3c016b92142c6cca9cd5bf7d0fbba28f0"
+    },
+    "/home/kdr/allianceann/experiments/arxiv_vamana_20261026/build/bin/alliance_search_disk": {
+      "size": 1159440,
+      "sha256": "10ecbbc35292c378584d4de0506fac5eafce6c108ddb9e82a162f01e640c5b95"
+    },
+    "/home/kdr/allianceann/experiments/benchmark_prepare_20261027/validate_navigation": {
+      "size": 45640,
+      "sha256": "62d0357d2018c8342eb5b600403a8525399db1598d18fa7b0b788db7bfe0805a"
+    },
+    "/home/kdr/allianceann/logs/p1_stage_attribution_20261018/arxiv2m_quantization.bin": {
+      "size": 342174600,
+      "sha256": "9e4622d150476028fdfe6bfdf0842cdae35395678411fd0d730428b0c5bb5476"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/equal/164333e12b14b24c1cd79301f063cfc0c2124f50ca4ea95d05aa1da265324b5f/static_503316480.layout": {
+      "size": 498092766,
+      "sha256": "d18e6d5e87f19fdf9891cb30641a55cdf0714497b25fa024aec715090c0e56b1"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/landing/132a1ccfbd44c8db575f19dd29a54a3c4db86880124e343805eef329acc4be10/static_503316480.layout": {
+      "size": 582787238,
+      "sha256": "38a1d5899b9d5e51664fd6d07f142182b6cb037e6fda48a4a11275dc67511393"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/landing/af979c556af295d9a8b374aeff5c8bb857885c29a114be28160042e469c9b69d/static_503316480.layout": {
+      "size": 582644326,
+      "sha256": "b00964fbb9c4703893325fad6fd531eaaa18808d736789280425feefd85039ee"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/landing/379f8f3a82212fd26a7575a43d0d8a14ee19eb344e2c6b8b345ee88d689e86d2/static_503316480.layout": {
+      "size": 582672622,
+      "sha256": "7d73d78848792eae606c0317f9d111ce348a1b1271e704669df0ea1e2fdb9fec"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/landing/0d8ab46ee1625dde72198b3f177c43e22818ffbd4ef4970e93f2b42a9ae3d9c5/static_503316480.layout": {
+      "size": 582644326,
+      "sha256": "ef1adc911347c0afb386d361ae049b3deedbf16a8f23e8edca3ee3b14eb9f2c5"
+    },
+    "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/landing/c32652f057da0ae8ad012f6e0a3950f649cc27e14611bcd084255323b8c7221d/static_503316480.layout": {
+      "size": 498092766,
+      "sha256": "d18e6d5e87f19fdf9891cb30641a55cdf0714497b25fa024aec715090c0e56b1"
+    }
+  },
+  "cache_policies": {
+    "equal": {
+      "origin": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/equal/164333e12b14b24c1cd79301f063cfc0c2124f50ca4ea95d05aa1da265324b5f/static_503316480.layout",
+      "p1": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/equal/164333e12b14b24c1cd79301f063cfc0c2124f50ca4ea95d05aa1da265324b5f/static_503316480.layout",
+      "p4": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/equal/164333e12b14b24c1cd79301f063cfc0c2124f50ca4ea95d05aa1da265324b5f/static_503316480.layout",
+      "p7": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/equal/164333e12b14b24c1cd79301f063cfc0c2124f50ca4ea95d05aa1da265324b5f/static_503316480.layout",
+      "p10": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/equal/164333e12b14b24c1cd79301f063cfc0c2124f50ca4ea95d05aa1da265324b5f/static_503316480.layout"
+    },
+    "landing": {
+      "origin": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/landing/132a1ccfbd44c8db575f19dd29a54a3c4db86880124e343805eef329acc4be10/static_503316480.layout",
+      "p1": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/landing/af979c556af295d9a8b374aeff5c8bb857885c29a114be28160042e469c9b69d/static_503316480.layout",
+      "p4": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/landing/379f8f3a82212fd26a7575a43d0d8a14ee19eb344e2c6b8b345ee88d689e86d2/static_503316480.layout",
+      "p7": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/landing/0d8ab46ee1625dde72198b3f177c43e22818ffbd4ef4970e93f2b42a9ae3d9c5/static_503316480.layout",
+      "p10": "/SSD/kdr/allianceann/arxiv2m/vamana_compare_20261026/vamana_top32/benchmark_cache/landing/c32652f057da0ae8ad012f6e0a3950f649cc27e14611bcd084255323b8c7221d/static_503316480.layout"
+    }
+  }
+}

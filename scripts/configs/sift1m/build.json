@@ -1,0 +1,12 @@
+{
+  "parameters": {
+    "basevec": "/SSD/SIFT1M/sift_base.fvecs",
+    "baseatt": "/SSD/SIFT1M/sift_base.attribute.ibin",
+    "wp": 5,
+    "space": "l2",
+    "build_mem_gb": 1.0,
+    "cluster_partition": "vamana"
+  },
+  "upper_builder": "wow",
+  "cross_cluster_inherit": "none"
+}
