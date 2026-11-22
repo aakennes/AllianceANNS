@@ -30,3 +30,6 @@ __pycache__/
 /docs/historical_disk_search_defaults.md
 /docs/uniform_layer_degree.txt
 /docs/rabitq_native_todo.txt
+
+# Local experiment configurations
+/scripts/configs/

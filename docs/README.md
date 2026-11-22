@@ -9,5 +9,3 @@
 - [Memory/cache budgets](workflows/search_memory.md), [I/O budget](workflows/search_io_budget.md), [metrics](workflows/search_metrics.md) and [completion waiting](nonblocking_search_wait.txt).
 - [Script entries](workflows/entry_points.md), [dataset configuration](workflows/dataset_workflow.md) and [test index](../src/test/README.md).
 - [External RaBitQ boundary](external_rabitq.txt) and [Vamana/ClusterWoW algorithm](vamana_cluster_build.txt).
-
-- [Frozen CaseLaw protocol](../scripts/configs/caselaw/README.md).
