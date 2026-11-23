@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
-#include <unordered_map>
+#include <bit>
 #include <vector>
 
 namespace alliance {
@@ -187,34 +187,71 @@ public:
     return nav;
   }
 
+private:
+  struct Candidate {
+    float d;
+    uint32_t id, rank;
+    bool expanded;
+  };
+
+public:
+  // Owned by a search worker. Only capacity survives a query boundary.
+  class Scratch {
+    friend class MemoryNavigationGraph;
+    std::vector<Candidate> pool_;
+    std::vector<uint32_t> slots_;
+
+    void Reset(size_t ef, size_t budget) {
+      pool_.clear();
+      pool_.reserve(ef + 1);
+      // At most budget distinct IDs can be scored. Keep an empty slot in
+      // every probe sequence even when the query consumes its entire budget.
+      if (budget > std::bit_floor(slots_.max_size()) / 2)
+        throw std::length_error("navigation: score budget too large");
+      slots_.assign(std::bit_ceil(2 * budget), invalid);
+    }
+
+    bool Mark(uint32_t id) {
+      const size_t mask = slots_.size() - 1;
+      size_t slot = ((uint64_t(id) * 11400714819323198485ull) >> 32) & mask;
+      while (slots_[slot] != invalid) {
+        if (slots_[slot] == id)
+          return false;
+        slot = (slot + 1) & mask;
+      }
+      slots_[slot] = id;
+      return true;
+    }
+  };
+
   // All rank bounds are in the ORIGINAL population, upper-exclusive. The
   // bounded query scratch is separate from every SSD visited set/cache.
   template <class Distance>
   Result Search(uint32_t lo, uint32_t hi, uint32_t landing, size_t ef, size_t budget, size_t count,
                 Distance distance) const {
+    Scratch scratch;
+    return Search(lo, hi, landing, ef, budget, count, distance, scratch);
+  }
+
+  template <class Distance>
+  Result Search(uint32_t lo, uint32_t hi, uint32_t landing, size_t ef, size_t budget, size_t count,
+                Distance &&distance, Scratch &scratch) const {
     if (lo >= hi || hi > population || landing >= windows.size() || !ef || !count || count > ef ||
         budget < count)
       throw std::invalid_argument("navigation: invalid query/budget");
-    struct Candidate {
-      float d;
-      uint32_t id, rank;
-      bool expanded;
-    };
+    const size_t limit = std::min(budget, size_t(population));
+    scratch.Reset(std::min(ef, limit), limit);
+    auto &pool = scratch.pool_;
     const auto better = [](const Candidate &a, const Candidate &b) {
       return a.d < b.d || (a.d == b.d && a.id < b.id);
     };
-    std::vector<Candidate> pool;
-    pool.reserve(std::min({ef, budget, size_t(population)}) + 1);
-    std::unordered_map<uint32_t, float> scored;
-    scored.reserve(std::min(budget, size_t(population)));
     Result result;
     auto offer = [&](uint32_t id, uint32_t rank) {
-      if (rank < lo || rank >= hi || scored.count(id) || result.scores == budget)
+      if (rank < lo || rank >= hi || result.scores == budget || !scratch.Mark(id))
         return false;
       const float d = distance(id);
       if (!std::isfinite(d))
         throw std::runtime_error("navigation: nonfinite distance");
-      scored.emplace(id, d);
       ++result.scores;
       Candidate c{d, id, rank, false};
       auto it = std::lower_bound(pool.begin(), pool.end(), c, better);

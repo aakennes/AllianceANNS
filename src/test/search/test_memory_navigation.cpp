@@ -96,6 +96,15 @@ void CheckSearch(const Navigation &graph) {
     workers.push_back(std::async(std::launch::async, search));
   for (auto &worker : workers)
     Check(worker.get() == expected);
+  Navigation::Scratch scratch;
+  for (const size_t budget : {80, 1, 256, 80}) {
+    const auto distance = [](uint32_t id) { return float(std::abs(int(id) - 500)); };
+    const auto fresh = graph.Search(100, 900, 2, 32, budget, 1, distance);
+    const auto reused = graph.Search(100, 900, 2, 32, budget, 1, distance, scratch);
+    Check(fresh.entries == reused.entries && fresh.scores == reused.scores &&
+          fresh.expansions == reused.expansions && fresh.edge_visits == reused.edge_visits &&
+          fresh.layers_visited == reused.layers_visited);
+  }
   // The coarse group has no rank 8; the denser group supplies it, not an endpoint.
   const auto narrow = graph.Search(8, 9, 2, 4, 4, 1, [](auto) { return 0.f; });
   Check(narrow.entries.size() == 1 && narrow.entries[0].second == 8 * 37);

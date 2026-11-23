@@ -9,6 +9,7 @@
 #include "io/io_handler.hpp"
 #include "search/disk_search_policy.hpp"
 #include "search/search_worker.hpp"
+#include "search/memory_navigation.hpp"
 #include "storage/storage_open_mode.hpp"
 
 namespace alliance {
@@ -20,6 +21,7 @@ private:
   StorageOpenMode storage_mode_;
 
 public:
+  MemoryNavigationGraph::Scratch navigation_scratch;
   std::unique_ptr<IOHandler> io_handler;
   size_t rerank_float_reused{0}, rerank_float_recomputed{0};
   size_t rerank_float_refined{0}; // Per-worker diagnostic counter.

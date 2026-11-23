@@ -19,7 +19,7 @@ struct GraphEntry {
 
 template <typename Attribute, typename Index, typename Filter, typename Estimator, typename Metrics>
 GraphEntry PrepareGraphEntry(Index &index, const Filter &filter, Estimator &estimator,
-                             const DiskSearchPolicy &policy, Metrics &metrics) {
+                             DiskSearchContext &context, Metrics &metrics) {
   GraphEntry entry;
   if constexpr (std::is_same_v<Filter, attr_range<Attribute>>) {
     std::vector<tableint> ids;
@@ -31,10 +31,10 @@ GraphEntry PrepareGraphEntry(Index &index, const Filter &filter, Estimator &esti
       const auto [lo, hi] = index.order_table_->GetRankRange(
           {filter.l_, 0}, {filter.u_, std::numeric_limits<label_t>::max()});
       auto navigation = index.Navigation().Search(
-          lo, hi, entry.layers.u_, policy.navigation_ef, policy.navigation_budget,
-          policy.navigation_count, [&](uint32_t id) {
+          lo, hi, entry.layers.u_, context.navigation_ef, context.navigation_budget,
+          context.navigation_count, [&](uint32_t id) {
             return estimator.dist_estimate(index.SearchCID(id), id);
-          });
+          }, context.navigation_scratch);
       for (const auto &[distance, id] : navigation.entries)
         entry.points.emplace_back(distance, id);
       ++metrics.metric_navigation_queries_;
